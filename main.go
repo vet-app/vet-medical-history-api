@@ -22,5 +22,5 @@ func main() {
 }
 
 func HealthCheck(w http.ResponseWriter, req *http.Request) {
-	_, _ = fmt.Fprintln(w, "Alive!")
+	_, _ = fmt.Fprint(w, "Alive!")
 }

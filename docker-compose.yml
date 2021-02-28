@@ -3,8 +3,8 @@ services:
   app:
     container_name: vet-api
     build:
-      context: ./../
-      dockerfile: .docker/Dockerfile
+      context: ""
+      dockerfile: ./Dockerfile
     ports:
       - 8090:8090
     environment:

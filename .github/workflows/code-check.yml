@@ -1,0 +1,37 @@
+name: Build Workflow
+
+on:
+  push:
+    branches-ignore:
+      - 'main'
+  pull_request:
+    types: [ opened, reopened ]
+
+jobs:
+  build:
+    name: Code check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16.0'
+
+      - name: Fetch dependencies
+        run: |
+          go get -u golang.org/x/lint/golint
+          go get -v -t -d ./...
+
+      - name: Build artifact
+        run: go build .
+
+      - name: Linter verifications
+        run: |
+          go vet .
+          golint .
+
+      - name: Extecute unit tests
+        run: go test -v ./...
