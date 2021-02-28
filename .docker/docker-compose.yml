@@ -1,0 +1,22 @@
+version: '3'
+services:
+  app:
+    container_name: vet-api
+    build:
+      context: ./../
+      dockerfile: .docker/Dockerfile
+    ports:
+      - 8090:8090
+    environment:
+      - PORT=8090
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    networks:
+      - net
+
+volumes:
+  api:
+
+networks:
+  net:
