@@ -1,22 +1,40 @@
-version: '3'
+version: "3.4"
 services:
   app:
-    container_name: vet-api
+    container_name: "api"
     build:
       context: ""
       dockerfile: ./Dockerfile
     ports:
       - 8090:8090
     environment:
-      - PORT=8090
-    restart: on-failure
+      PORT: 8090
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: root
+      DB_NAME: vet
+      SSL_MODE: disable
+    restart: always
     volumes:
-      - api:/usr/src/app/
+      - api-data:/usr/src/app/
     networks:
-      - net
+      - api-backend
+
+  postgres:
+    container_name: "postgres"
+    image: postgres:12.3
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: vet
+      POSTGRES_PASSWORD: root
+    restart: always
+    networks:
+      - api-backend
 
 volumes:
-  api:
+  api-data:
 
 networks:
-  net:
+  api-backend:

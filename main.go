@@ -1,12 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gorilla/mux"
-	"log"
-	"net/http"
+	"github.com/vet-app/vet-medical-history-api/pkg"
 	"os"
 )
+
+var server = pkg.Server{}
 
 func main() {
 	port := os.Getenv("PORT")
@@ -14,13 +13,14 @@ func main() {
 		panic("$PORT not set")
 	}
 
-	r := mux.NewRouter()
-	r.HandleFunc("/", HealthCheck)
-	http.Handle("/", r)
-	fmt.Println("Starting up on 8080")
-	log.Fatal(http.ListenAndServe(":" + port, nil))
-}
+	server.Initialize(
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("SSL_MODE"),
+	)
 
-func HealthCheck(w http.ResponseWriter, req *http.Request) {
-	_, _ = fmt.Fprint(w, "Alive!")
+	server.Run(":" + port)
 }
