@@ -3,6 +3,7 @@ package pkg
 import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/vet-app/vet-medical-history-api/pkg/helpers"
 	"github.com/vet-app/vet-medical-history-api/pkg/models"
 	"log"
 	"net/http"
@@ -20,7 +21,7 @@ func (server *Server) Initialize(dbHost, dbPort, dbUser, dbPassword, dbName, ssl
 	go models.DBConnection(wg, dbHost, dbPort, dbUser, dbPassword, dbName, ssl)
 	wg.Wait()
 
-	// database.MigrateDatabase()
+	helpers.FirebaseConnection()
 
 	server.Router = mux.NewRouter().StrictSlash(true)
 	server.initializeRoutes()

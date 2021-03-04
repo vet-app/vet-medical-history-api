@@ -12,4 +12,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o server .
 
 EXPOSE 8090
 
-CMD ./server
+ENTRYPOINT ["sh", "./bin/cast_google_credentials.sh"]
+
+CMD ["./server"]

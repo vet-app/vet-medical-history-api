@@ -15,6 +15,7 @@ services:
       DB_PASSWORD: root
       DB_NAME: vet
       SSL_MODE: disable
+      GOOGLE_APPLICATION_CREDENTIALS: firebase-admin-sdk.json
     restart: always
     volumes:
       - api-data:/usr/src/app/

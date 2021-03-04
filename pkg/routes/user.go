@@ -10,24 +10,24 @@ var UsersRoutes = Routes{
 		"Get Users",
 		"GET",
 		"/",
-		middlewares.SetMiddlewareJSON(controllers.GetUsers),
+		middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controllers.GetUsers)),
 	},
 	Route{
 		"Get User By ID",
 		"GET",
 		"/{id}",
-		middlewares.SetMiddlewareJSON(controllers.GetUserByID),
+		middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controllers.GetUserByID)),
 	},
 	Route{
 		"Create User",
 		"POST",
 		"/",
-		middlewares.SetMiddlewareJSON(controllers.CreateUser),
+		middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controllers.CreateUser)),
 	},
 	Route{
 		"Update User",
 		"PUT",
 		"/",
-		middlewares.SetMiddlewareJSON(controllers.UpdateUser),
+		middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controllers.UpdateUser)),
 	},
 }
