@@ -14,6 +14,15 @@ func (server *Server) initializeRoutes() {
 	userRouter := apiPrefix.PathPrefix("/users").Subrouter().StrictSlash(true)
 	m[userRouter] = routes.UsersRoutes
 
+	petRouter := server.Router.PathPrefix("/pets").Subrouter().StrictSlash(true)
+	m[petRouter] = routes.PetsRoutes
+
+	specieRouter := server.Router.PathPrefix("/species").Subrouter().StrictSlash(true)
+	m[specieRouter] = routes.SpeciesRoutes
+
+	breedRouter := server.Router.PathPrefix("/breeds").Subrouter().StrictSlash(true)
+	m[breedRouter] = routes.BreedsRoutes
+
 	for router, r := range m {
 		setRoutes(router, r)
 	}

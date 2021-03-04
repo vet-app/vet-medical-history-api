@@ -42,7 +42,7 @@ var MockError = map[string]interface{}{
 	"name":         123,
 	"phone_number": "408-237-2345",
 	"created_at":   "",
-	"updated_at":    time.Time{},
+	"updated_at":   time.Time{},
 }
 
 func SetupRepository() {

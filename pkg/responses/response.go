@@ -9,6 +9,7 @@ import (
 type RequestResponse struct {
 	Response string `json:"message"`
 	ID       string `json:"id"`
+	Filename string `json:"filename"`
 }
 
 func JSON(w http.ResponseWriter, statusCode int, data interface{}) {

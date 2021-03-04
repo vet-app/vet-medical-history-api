@@ -107,4 +107,3 @@ func TestCreateUser(t *testing.T) {
 		})
 	}
 }
-

@@ -23,4 +23,3 @@ func TokenValid(r *http.Request) (string, error) {
 
 	return token.UID, nil
 }
-
