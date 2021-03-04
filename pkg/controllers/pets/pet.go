@@ -7,6 +7,7 @@ import (
 	"github.com/vet-app/vet-medical-history-api/pkg/models/pets"
 	"github.com/vet-app/vet-medical-history-api/pkg/responses"
 	"net/http"
+	"strconv"
 )
 
 func GetPetsByUser(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +22,8 @@ func GetPetsByUser(w http.ResponseWriter, r *http.Request) {
 
 func GetPetByID(w http.ResponseWriter, r *http.Request) {
 	var params = mux.Vars(r)
-	pet, err := pets.GetPetByID(params["id"])
+	id, _ := strconv.ParseUint(params["id"], 0, 64)
+	pet, err := pets.GetPetByID(id)
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
@@ -36,7 +38,7 @@ func CreatePet(w http.ResponseWriter, r *http.Request) {
 	pet.UserID = r.URL.Query().Get("uid")
 	pet.BreedID = pet.Breed.ID
 
-	filename, err := pets.CreatePet(pet)
+	filename, id, err := pets.CreatePet(pet)
 
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
@@ -45,6 +47,7 @@ func CreatePet(w http.ResponseWriter, r *http.Request) {
 
 	response := responses.RequestResponse{
 		Response: "Datos guardados satisfactoriamente",
+		ID: strconv.FormatUint(id, 10),
 		Filename: filename,
 	}
 	responses.JSON(w, http.StatusOK, response)
@@ -53,7 +56,7 @@ func CreatePet(w http.ResponseWriter, r *http.Request) {
 func UpdatePet(w http.ResponseWriter, r *http.Request) {
 	var params = mux.Vars(r)
 	var pet pets.Pet
-	id := params["id"]
+	id, _ := strconv.ParseUint(params["id"], 0, 64)
 	_ = json.NewDecoder(r.Body).Decode(&pet)
 	err := pets.UpdatePet(id, pet)
 	if err != nil {
@@ -97,7 +100,7 @@ func UploadPetPhoto(w http.ResponseWriter, r *http.Request) {
 
 func UpdatePetPhoto(w http.ResponseWriter, r *http.Request) {
 	var params = mux.Vars(r)
-	id := params["id"]
+	id, _ := strconv.ParseUint(params["id"], 0, 64)
 
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
@@ -138,7 +141,7 @@ func UpdatePetPhoto(w http.ResponseWriter, r *http.Request) {
 func SearchPetID(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	p, err := pets.SearchPetID(data["keyword"].(string))
+	p, err := pets.SearchPetID(data["keyword"].(uint64))
 
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)

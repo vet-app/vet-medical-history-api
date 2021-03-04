@@ -4,11 +4,12 @@ import (
 	"github.com/vet-app/vet-medical-history-api/pkg/helpers"
 	"github.com/vet-app/vet-medical-history-api/pkg/models"
 	"github.com/vet-app/vet-medical-history-api/pkg/models/entities"
+	"strconv"
 	"time"
 )
 
 type Pet struct {
-	ID         string        `json:"id" gorm:"primary_key;autoIncrement;"`
+	ID         uint64        `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
 	Name       string        `json:"name" gorm:"size:60;not null"`
 	BornDate   time.Time     `json:"born_date" gorm:"not null"`
 	Weight     string        `json:"weight" gorm:"size:10"`
@@ -22,13 +23,13 @@ type Pet struct {
 	UpdatedAt  time.Time     `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
 
-var petBucketUrl = "https://firebasestorage.googleapis.com/v0/b/firuapp-62849.appspot.com/o/pets%2F"
+var petBucketUrl = "https://firebasestorage.googleapis.com/v0/b/vet-app-ui.appspot.com/o/pets%2F"
 
 func GetPetsByUser(userId string) (*[]Pet, error) {
 	var pets []Pet
 	var result []Pet
 	err := models.DB.Debug().Model(&Pet{}).
-		Joins("JOIN \"user\" u ON u.id = pet.user_id").
+		Joins("JOIN \"users\" u ON u.id = pets.user_id").
 		Where("u.id = ?", userId).
 		Find(&pets).Error
 
@@ -51,7 +52,7 @@ func GetPetsByUser(userId string) (*[]Pet, error) {
 	return &pets, nil
 }
 
-func GetPetByID(id string) (*Pet, error) {
+func GetPetByID(id uint64) (*Pet, error) {
 	var pet Pet
 	err := models.DB.Debug().Model(&Pet{}).Where("id = ?", id).Take(&pet).Error
 
@@ -59,7 +60,7 @@ func GetPetByID(id string) (*Pet, error) {
 		return &Pet{}, err
 	}
 
-	if pet.ID != "" {
+	if pet.ID != 0 {
 		mascot, err := AddPetData(pet)
 
 		if err != nil {
@@ -72,7 +73,7 @@ func GetPetByID(id string) (*Pet, error) {
 	return &pet, nil
 }
 
-func CreatePet(pet Pet) (string, error) {
+func CreatePet(pet Pet) (string, uint64, error) {
 	filename := helpers.AddFilename(pet.FileMime)
 
 	pet.PictureURL = petBucketUrl + filename + "?alt=media"
@@ -80,13 +81,13 @@ func CreatePet(pet Pet) (string, error) {
 	err := models.DB.Debug().Model(&Pet{}).Create(&pet).Error
 
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 
-	return filename, nil
+	return filename, pet.ID, nil
 }
 
-func UpdatePet(id string, pet Pet) error {
+func UpdatePet(id uint64, pet Pet) error {
 	err := models.DB.Debug().Model(&Pet{}).Where("id = ?", id).Updates(
 		map[string]interface{}{
 			"Name":      pet.Name,
@@ -104,7 +105,7 @@ func UpdatePet(id string, pet Pet) error {
 	return nil
 }
 
-func UpdatePetPhoto(id string, fileMime string) (string, error) {
+func UpdatePetPhoto(id uint64, fileMime string) (string, error) {
 	filename := helpers.AddFilename(fileMime)
 	pictureUrl := petBucketUrl + filename + "?alt=media"
 
@@ -122,10 +123,12 @@ func UpdatePetPhoto(id string, fileMime string) (string, error) {
 	return filename, nil
 }
 
-func SearchPetID(id string) (*[]Pet, error) {
+func SearchPetID(id uint64) (*[]Pet, error) {
 	var pets []Pet
 	var result []Pet
-	err := models.DB.Debug().Model(&Pet{}).Where("id LIKE ?", "%"+id+"%").
+	targetID := strconv.FormatUint(id, 10)
+
+	err := models.DB.Debug().Model(&Pet{}).Where("id LIKE ?", "%"+targetID+"%").
 		Limit(100).Find(&pets).Error
 
 	if err != nil {

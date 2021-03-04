@@ -30,6 +30,8 @@ services:
     environment:
       POSTGRES_DB: vet
       POSTGRES_PASSWORD: root
+    volumes:
+      - ./bin/script.sql:/docker-entrypoint-initdb.d/init.sql
     restart: always
     networks:
       - api-backend

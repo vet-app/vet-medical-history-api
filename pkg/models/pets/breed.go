@@ -102,7 +102,7 @@ func GetBreedBySpecie(id string) (*[]Breed, error) {
 	var breeds []Breed
 	var result []Breed
 	err := models.DB.Debug().Model(&Breed{}).
-		Joins("JOIN \"specie\" s ON s.id = breed.specie_id").
+		Joins("JOIN \"species\" s ON s.id = breed.specie_id").
 		Where("s.id = ?", id).Take(&breeds).Error
 
 	if err != nil {
