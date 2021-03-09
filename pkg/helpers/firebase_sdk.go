@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	firebase "firebase.google.com/go"
+	"github.com/getsentry/sentry-go"
 	"google.golang.org/api/option"
 	"io"
 	"log"
@@ -25,6 +26,7 @@ func FirebaseConnection() {
 
 	app, err := firebase.NewApp(context.Background(), config, opt)
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Fatal("On Firebase SDK connection: ", err)
 	}
 
@@ -35,12 +37,12 @@ func FirebaseConnection() {
 func storageConnection() *storage.BucketHandle {
 	client, err := FirebaseApp.Storage(context.Background())
 	if err != nil {
-		log.Fatalln(err)
+		sentry.CaptureException(err)
 	}
 
 	bucket, err := client.DefaultBucket()
 	if err != nil {
-		log.Fatalln(err)
+		sentry.CaptureException(err)
 	}
 
 	return bucket
@@ -57,6 +59,7 @@ func StoreFile(file multipart.File, bucketName, filename string) (err error) {
 	}
 
 	if err := wc.Close(); err != nil {
+		sentry.CaptureException(err)
 		return err
 	}
 
