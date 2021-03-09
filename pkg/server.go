@@ -1,13 +1,16 @@
 package pkg
 
 import (
+	"github.com/getsentry/sentry-go"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/vet-app/vet-medical-history-api/pkg/helpers"
 	"github.com/vet-app/vet-medical-history-api/pkg/models"
 	"log"
 	"net/http"
+	"os"
 	"sync"
+	"time"
 )
 
 type Server struct {
@@ -15,8 +18,18 @@ type Server struct {
 }
 
 func (server *Server) Initialize(dbHost, dbPort, dbUser, dbPassword, dbName, ssl string) {
-	wg := &sync.WaitGroup{}
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: os.Getenv("SENTRY_DSN"),
+		Environment: os.Getenv("ENV"),
+		Release: "vet-history@1.0.0",
+		Debug: true,
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
+	}
+	defer sentry.Flush(2 * time.Second)
 
+	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go models.DBConnection(wg, dbHost, dbPort, dbUser, dbPassword, dbName, ssl)
 	wg.Wait()

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 	"github.com/vet-app/vet-medical-history-api/pkg/helpers"
 	"log"
 	"net/http"
@@ -12,6 +13,7 @@ func TokenValid(r *http.Request) (string, error) {
 
 	client, err := helpers.FirebaseApp.Auth(context.Background())
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Fatalf("error getting Auth client: %v\n", err)
 		return "", err
 	}
