@@ -16,6 +16,7 @@ services:
       DB_NAME: vet
       SSL_MODE: disable
       GOOGLE_APPLICATION_CREDENTIALS: firebase-admin-sdk.json
+      FIREBASE_BUCKET: vet-app-ui.appspot.com
       SENTRY_DSN: https://43b7c00d17f64bf3962c5d538275aa49:d88b1dac88ac451ba44f60f851f66892@o545423.ingest.sentry.io/5667278
       ENV: Development
     restart: always
