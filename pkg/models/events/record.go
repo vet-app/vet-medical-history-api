@@ -8,7 +8,7 @@ import (
 
 type Record struct {
 	ID           string      `json:"id,omitempty" gorm:"primary_key"`
-	Name         string      `json:"name,omitempty" gorm:"size:60;not null"`
+	Title        string      `json:"title,omitempty" gorm:"size:60;not null"`
 	SpecieID     string      `json:"specie_id,omitempty" gorm:"REFERENCES species(id)"`
 	Specie       pets.Specie `json:"specie" gorm:"association_autoupdate:false;association_autocreate:false"`
 	RecordTypeID string      `json:"record_type_id,omitempty" gorm:"REFERENCES record_types(id)"`
@@ -56,7 +56,7 @@ func CreateRecord(record Record) error {
 func UpdateRecord(id string, record Record) error {
 	err := models.DB.Debug().Model(&Record{}).Where("id = ?", id).Updates(
 		map[string]interface{}{
-			"Name":    record.Name,
+			"Title":    record.Title,
 			"RecordTypeID":    record.RecordTypeID,
 			"SpecieID": record.SpecieID,
 			"Deleted": false,

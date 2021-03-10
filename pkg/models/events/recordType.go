@@ -52,7 +52,7 @@ func CreateRecordType(recordType RecordType) error {
 func UpdateRecordType(id string, recordType RecordType) error {
 	err := models.DB.Debug().Model(&RecordType{}).Where("id = ?", id).Updates(
 		map[string]interface{}{
-			"Name":    recordType.Name,
+			"Title":    recordType.Name,
 			"Deleted": false,
 		},
 	).Error

@@ -48,7 +48,7 @@ var RecordRoutes = Routes{
 	Route{
 		"Get All Records",
 		"GET",
-		"/{id}",
+		"/",
 		middlewares.SetMiddlewareJSON(events.GetAllRecords),
 	},
 	Route{
