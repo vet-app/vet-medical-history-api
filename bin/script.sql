@@ -34,7 +34,7 @@ CREATE TABLE "breeds"
 
 CREATE TABLE "pets"
 (
-    id          SERIAL NOT NULL,
+    id          SERIAL       NOT NULL,
     name        VARCHAR(60)  NOT NULL,
     born_date   DATE         NOT NULL,
     weight      VARCHAR(10),
@@ -47,6 +47,59 @@ CREATE TABLE "pets"
 
     CONSTRAINT id_pk_pet PRIMARY KEY (id)
 );
+
+CREATE TABLE "events"
+(
+    id          VARCHAR(36) NOT NULL,
+    title       VARCHAR(60) NOT NULL,
+    description VARCHAR,
+    start_date  DATE        NOT NULL,
+    next_date   DATE,
+    pet_id      INT         NOT NULL,
+    vetstore_id VARCHAR(36),
+    record_id   VARCHAR(36) NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT id_pk_eve PRIMARY KEY (id)
+);
+
+CREATE TABLE "record_types"
+(
+    id      VARCHAR(36) NOT NULL,
+    name    VARCHAR(60) NOT NULL,
+    tag     VARCHAR(60),
+    deleted Boolean     NOT NUll,
+
+    CONSTRAINT id_pk_rct PRIMARY KEY (id)
+);
+
+CREATE TABLE "records"
+(
+    id             VARCHAR(36) NOT NULL,
+    title          VARCHAR(60) NOT NULL,
+    specie_id      VARCHAR(36) NOT NULL,
+    record_type_id VARCHAR(36) NOT NULL,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT id_pk_rec PRIMARY KEY (id)
+);
+
+ALTER TABLE "breeds"
+    ADD CONSTRAINT brd_fk_spc FOREIGN KEY (specie_id) REFERENCES "species" (id);
+
+ALTER TABLE "pets"
+    ADD CONSTRAINT pet_fk_usr FOREIGN KEY (user_id) REFERENCES "users" (id),
+    ADD CONSTRAINT pet_fk_brd FOREIGN KEY (breed_id) REFERENCES "breeds" (id);
+
+ALTER TABLE "events"
+    ADD CONSTRAINT eve_fk_pet FOREIGN KEY (pet_id) REFERENCES "pets" (id),
+    ADD CONSTRAINT eve_fk_rec FOREIGN KEY (record_id) REFERENCES "records" (id);
+
+ALTER TABLE "records"
+    ADD CONSTRAINT rec_fk_spe FOREIGN KEY (specie_id) REFERENCES "species" (id),
+    ADD CONSTRAINT rec_fk_rct FOREIGN KEY (record_type_id) REFERENCES "record_types" (id);
 
 INSERT INTO "users" (id, name, address, phone_number, email)
 VALUES ('BGkus5m0kIeqDUFnCC7NCSPfNzC2',

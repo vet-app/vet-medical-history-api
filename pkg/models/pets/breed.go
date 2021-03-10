@@ -8,7 +8,7 @@ import (
 type Breed struct {
 	ID       string `json:"id,omitempty" gorm:"primary_key"`
 	Name     string `json:"name,omitempty" gorm:"size:60;not null"`
-	SpecieID string `json:"specie_id,omitempty" gorm:"REFERENCES specie(id)"`
+	SpecieID string `json:"specie_id,omitempty" gorm:"REFERENCES species(id)"`
 	Specie   Specie `json:"specie" gorm:"association_autoupdate:false;association_autocreate:false"`
 	Deleted  bool   `json:"-"`
 }
