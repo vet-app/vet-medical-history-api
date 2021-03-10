@@ -13,9 +13,9 @@ type Pet struct {
 	Name       string        `json:"name" gorm:"size:60;not null"`
 	BornDate   time.Time     `json:"born_date" gorm:"not null"`
 	Weight     string        `json:"weight" gorm:"size:10"`
-	UserID     string        `json:"user_id,omitempty" gorm:"REFERENCES user(id)"`
+	UserID     string        `json:"user_id,omitempty" gorm:"REFERENCES users(id)"`
 	User       entities.User `json:"user" gorm:"association_autoupdate:false;association_autocreate:false"`
-	BreedID    string        `json:"breed_id,omitempty" gorm:"REFERENCES breed(id)"`
+	BreedID    string        `json:"breed_id,omitempty" gorm:"REFERENCES breeds(id)"`
 	Breed      Breed         `json:"breed" gorm:"association_autoupdate:false;association_autocreate:false"`
 	PictureURL string        `json:"picture_url" gorm:"column:picture_url;not null"`
 	FileMime   string        `json:"mime_type" gorm:"column:mime_type"`

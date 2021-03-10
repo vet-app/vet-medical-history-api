@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"github.com/getsentry/sentry-go"
 	"github.com/jinzhu/gorm"
 	"log"
 	"sync"
@@ -21,7 +20,7 @@ func DBConnection(wg *sync.WaitGroup, dbHost, dbPort, dbUser, dbPassword, dbName
 	database, err := gorm.Open("postgres", dsn)
 	if err != nil {
 		log.Println("Cannot connect to Postgres database")
-		sentry.CaptureException(err)
+		// sentry.CaptureException(err)
 	}
 
 	log.Println("Connected to Postgres database")
