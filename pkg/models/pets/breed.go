@@ -71,7 +71,7 @@ func CreateBreed(breed Breed) error {
 func UpdateBreed(id string, breed Breed) error {
 	err := models.DB.Debug().Model(&Breed{}).Where("id = ?", id).Updates(
 		map[string]interface{}{
-			"Name":     breed.Name,
+			"Title":     breed.Name,
 			"SpecieID": breed.SpecieID,
 			"Deleted":  false,
 		},

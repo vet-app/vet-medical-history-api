@@ -26,7 +26,7 @@ func GetEventsByPet(petId string) (*[]Event, error) {
 	var records []Event
 	var result []Event
 	err := models.DB.Debug().Model(&Event{}).
-		Joins("JOIN \"pet\" p ON p.id = record.pet_id").
+		Joins("JOIN \"pets\" p ON p.id = events.pet_id").
 		Where("p.id = ?", petId).
 		Find(&records).Error
 
@@ -81,7 +81,7 @@ func CreateEvents(event Event) error {
 }
 
 func UpdateEvents(id string, event Event) error {
-	err := models.DB.Debug().Model(&Record{}).Where("id = ?", id).Updates(
+	err := models.DB.Debug().Model(&Event{}).Where("id = ?", id).Updates(
 		map[string]interface{}{
 			"Title":       event.Title,
 			"Description": event.Description,

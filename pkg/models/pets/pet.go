@@ -90,7 +90,7 @@ func CreatePet(pet Pet) (string, uint64, error) {
 func UpdatePet(id uint64, pet Pet) error {
 	err := models.DB.Debug().Model(&Pet{}).Where("id = ?", id).Updates(
 		map[string]interface{}{
-			"Name":      pet.Name,
+			"Title":      pet.Name,
 			"BornDate":  pet.BornDate,
 			"Weight":    pet.Weight,
 			"BreedID":   pet.BreedID,

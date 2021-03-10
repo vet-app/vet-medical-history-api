@@ -51,7 +51,7 @@ func CreateSpecie(specie Specie) error {
 func UpdateSpecie(id string, specie Specie) error {
 	err := models.DB.Debug().Model(&Specie{}).Where("id = ?", id).Updates(
 		map[string]interface{}{
-			"Name":    specie.Name,
+			"Title":    specie.Name,
 			"Deleted": false,
 		},
 	).Error

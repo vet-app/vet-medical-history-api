@@ -82,6 +82,7 @@ CREATE TABLE "records"
     record_type_id VARCHAR(36) NOT NULL,
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted        Boolean     NOT NUll,
 
     CONSTRAINT id_pk_rec PRIMARY KEY (id)
 );
